@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CallOfFile.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Prj\\VS\\CallOfFile\\src\\CallOfFile.CLI\\bin\\Debug\\net6.0\\coffee_cart.xmodel_bin\" \"C:\\Prj\\VS\\CallOfFile\\src\\CallOfFile.CLI\\bin\\Debug\\net6.0\\coffee_cart.xmodel_export\""
+    }
+  }
+}
