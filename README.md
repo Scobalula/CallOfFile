@@ -24,7 +24,7 @@ A lot of work and testing has gone into Call of File, but if you find a bug, fee
 
 Contributions are absolutely welcome, if you'd like to contribute code, then you can fork the repo and make edits, then open a PR, don't worry if you think you're code isn't perfect or well documented, as we can make any edits we feel are necessary to bring it up to scratch!
 
-Before contributing, make sure you've read the contributors guidelines, if you have any questions, then feel free to ask!
+When contributing, ensure to keep your contributions compatible with the MIT license, this includes any libraries used. Also make sure to keep track of credits for any code you use!
 
 # License/Disclaimers
 
