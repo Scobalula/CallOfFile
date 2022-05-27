@@ -141,6 +141,9 @@ namespace CallOfFile
                         {
                             var result = new TokenDataUVSet(token);
                             var uvSets = ushort.Parse(TokenList[1]);
+                            // exportx patch, 0 UV sets reported.....
+                            if (uvSets == 0)
+                                uvSets = 1;
                             for (int i = 0; i < uvSets; i++)
                                 result.UVs.Add(new Vector2(
                                     float.Parse(TokenList[2 + (i * 2) + 0]),
