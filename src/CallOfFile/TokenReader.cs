@@ -59,7 +59,7 @@ namespace CallOfFile
                 if (names.Contains(nextToken.Token.Name) && nextToken is T expectedToken)
                     return expectedToken;
 
-                throw new IOException($"Expected token {names} of type: {typeof(T)} but got {nextToken?.Token.Name} of type {nextToken?.GetType()}");
+                throw new IOException($"Expected token {string.Join(" or ", names)} of type: {typeof(T)} but got {nextToken?.Token.Name} of type {nextToken?.GetType()}");
             }
         }
 

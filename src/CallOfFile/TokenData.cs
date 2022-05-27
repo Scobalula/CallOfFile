@@ -55,7 +55,7 @@ namespace CallOfFile
             if (names.Contains(Token.Name) && this is T t)
                 return t;
 
-            throw new Exception($"Expected token {names} of type: {typeof(T)} but got {Token.Name} of type {Token.GetType()}");
+            throw new Exception($"Expected token {string.Join(" or ", names)} of type: {typeof(T)} but got {Token.Name} of type {Token.GetType()}");
         }
 
         /// <inheritdoc/>
