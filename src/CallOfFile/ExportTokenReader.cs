@@ -2,6 +2,9 @@
 // Call of File - By Philip Maher
 // Refer to LICENSE.md for license information.
 // -----------------------------------------------
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
 using System.Text;
 
 namespace CallOfFile
@@ -17,9 +20,9 @@ namespace CallOfFile
         /// <param name="fileName">The path to the file to read from.</param>
         public ExportTokenReader(string fileName)
         {
-            TokenBuilder = new(256);
-            TokenList = new(8);
-            Reader = new(fileName);
+            TokenBuilder = new StringBuilder(256);
+            TokenList = new List<string>(8);
+            Reader = new StreamReader(fileName);
         }
 
         /// <summary>
@@ -28,14 +31,14 @@ namespace CallOfFile
         /// <param name="stream">The stream to read from.</param>
         public ExportTokenReader(Stream stream)
         {
-            TokenBuilder = new(256);
-            TokenList = new(8);
-            Reader = new(stream);
+            TokenBuilder = new StringBuilder(256);
+            TokenList = new List<string>(8);
+            Reader = new StreamReader(stream);
         }
 
 
         /// <inheritdoc/>
-        public override TokenData? RequestNextToken()
+        public override TokenData RequestNextToken()
         {
             while (true)
             {
@@ -100,14 +103,14 @@ namespace CallOfFile
                         }
                     case TokenDataType.Vector2:
                         {
-                            return new TokenDataVector2(new(
+                            return new TokenDataVector2(new Vector2(
                                 float.Parse(TokenList[1]),
                                 float.Parse(TokenList[2])), token);
                         }
                     case TokenDataType.Vector3:
                     case TokenDataType.Vector316Bit:
                         {
-                            return new TokenDataVector3(new(
+                            return new TokenDataVector3(new Vector3(
                                 float.Parse(TokenList[1]),
                                 float.Parse(TokenList[2]),
                                 float.Parse(TokenList[3])), token);
@@ -115,7 +118,7 @@ namespace CallOfFile
                     case TokenDataType.Vector4:
                     case TokenDataType.Vector48Bit:
                         {
-                            return new TokenDataVector4(new(
+                            return new TokenDataVector4(new Vector4(
                                 float.Parse(TokenList[1]),
                                 float.Parse(TokenList[2]),
                                 float.Parse(TokenList[3]),
@@ -139,7 +142,7 @@ namespace CallOfFile
                             var result = new TokenDataUVSet(token);
                             var uvSets = ushort.Parse(TokenList[1]);
                             for (int i = 0; i < uvSets; i++)
-                                result.UVs.Add(new(
+                                result.UVs.Add(new Vector2(
                                     float.Parse(TokenList[2 + (i * 2) + 0]),
                                     float.Parse(TokenList[2 + (i * 2) + 1])));
                             return result;

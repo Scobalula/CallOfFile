@@ -2,6 +2,7 @@
 // Call of File - By Philip Maher
 // Refer to LICENSE.md for license information.
 // -----------------------------------------------
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace CallOfFile
@@ -22,7 +23,7 @@ namespace CallOfFile
         /// <param name="token">The token.</param>
         public TokenDataUVSet(Token token) : base(token)
         {
-            UVs = new();
+            UVs = new List<Vector2>();
         }
     }
 }

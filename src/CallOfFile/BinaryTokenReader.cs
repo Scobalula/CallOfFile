@@ -2,6 +2,9 @@
 // Call of File - By Philip Maher
 // Refer to LICENSE.md for license information.
 // -----------------------------------------------
+using System;
+using System.IO;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -20,8 +23,8 @@ namespace CallOfFile
         /// <param name="fileName">The path to the file to read from.</param>
         public BinaryTokenReader(string fileName)
         {
-            using var temp = File.OpenRead(fileName);
-            InputBuffer = Decompress(temp);
+            using(var temp = File.OpenRead(fileName))
+                InputBuffer = Decompress(temp);
         }
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace CallOfFile
         }
 
         /// <inheritdoc/>
-        public override TokenData? RequestNextToken()
+        public override TokenData RequestNextToken()
         {
             // No tokens left
             if (InputPosition >= InputBuffer.Length)
@@ -108,14 +111,14 @@ namespace CallOfFile
                 case TokenDataType.Vector2:
                     {
                         Align(4);
-                        return new TokenDataVector2(new(
+                        return new TokenDataVector2(new Vector2(
                             Read<float>(),
                             Read<float>()), token);
                     }
                 case TokenDataType.Vector3:
                     {
                         Align(4);
-                        return new TokenDataVector3(new(
+                        return new TokenDataVector3(new Vector3(
                             Read<float>(),
                             Read<float>(),
                             Read<float>()), token);
@@ -123,7 +126,7 @@ namespace CallOfFile
                 case TokenDataType.Vector316Bit:
                     {
                         Align(2);
-                        return new TokenDataVector3(new(
+                        return new TokenDataVector3(new Vector3(
                             Read<short>() * (1 / 32767.0f),
                             Read<short>() * (1 / 32767.0f),
                             Read<short>() * (1 / 32767.0f)), token);
@@ -131,7 +134,7 @@ namespace CallOfFile
                 case TokenDataType.Vector4:
                     {
                         Align(4);
-                        return new TokenDataVector4(new(
+                        return new TokenDataVector4(new Vector4(
                             Read<float>(),
                             Read<float>(),
                             Read<float>(),
@@ -140,7 +143,7 @@ namespace CallOfFile
                 case TokenDataType.Vector48Bit:
                     {
                         Align(4);
-                        return new TokenDataVector4(new(
+                        return new TokenDataVector4(new Vector4(
                             Read<byte>() * (1 / 255.0f),
                             Read<byte>() * (1 / 255.0f),
                             Read<byte>() * (1 / 255.0f),
@@ -164,7 +167,7 @@ namespace CallOfFile
                         var result = new TokenDataUVSet(token);
                         var uvSets = Read<ushort>();
                         for (int i = 0; i < uvSets; i++)
-                            result.UVs.Add(new(
+                            result.UVs.Add(new Vector2(
                                 Read<float>(),
                                 Read<float>()));
                         return result;
@@ -230,21 +233,21 @@ namespace CallOfFile
         /// <exception cref="IOException"></exception>
         internal static byte[] Decompress(Stream stream)
         {
-            Span<byte> magicBuf = stackalloc byte[5];
-            Span<byte> sizeBuf = stackalloc byte[4];
+            var magicBuf = new byte[5];
+            var sizeBuf = new byte[4];
 
-            if (stream.Read(magicBuf) < magicBuf.Length)
+            if (stream.Read(magicBuf, 0, magicBuf.Length) < magicBuf.Length)
                 throw new IOException("Unexpected end of file while reading XBin Magic");
-            if (stream.Read(sizeBuf) < sizeBuf.Length)
+            if (stream.Read(sizeBuf, 0, sizeBuf.Length) < sizeBuf.Length)
                 throw new IOException("Unexpected end of file while reading XBin Size");
 
             var compressedSize = stream.Length - stream.Position;
-            var size = BitConverter.ToInt32(sizeBuf);
+            var size = BitConverter.ToInt32(sizeBuf, 0);
 
             var compressedBuffer = new byte[compressedSize];
             var decompressedBuffer = new byte[size];
 
-            if (stream.Read(compressedBuffer) < compressedBuffer.Length)
+            if (stream.Read(compressedBuffer, 0, compressedBuffer.Length) < compressedBuffer.Length)
                 throw new IOException("Unexpected end of file while reading XBin Data");
             if (LZ4Codec.Decode(compressedBuffer, decompressedBuffer) != size)
                 throw new IOException("No more kitten, daddy is not ready.");

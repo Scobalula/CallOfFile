@@ -2,6 +2,9 @@
 // Call of File - By Philip Maher
 // Refer to LICENSE.md for license information.
 // -----------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using K4os.Compression.LZ4;
@@ -222,8 +225,8 @@ namespace CallOfFile
                     // Dump our final buffer.
                     var result = new byte[LZ4Codec.MaximumOutputSize(CurrentOutputPosition)];
                     var resultSize = LZ4Codec.Encode(OutputBuffer, 0, CurrentOutputPosition, result, 0, result.Length);
-                    Output.Write(LZ4Magic);
-                    Output.Write(BitConverter.GetBytes(CurrentOutputPosition));
+                    Output.Write(LZ4Magic, 0, LZ4Magic.Length);
+                    Output.Write(BitConverter.GetBytes(CurrentOutputPosition), 0, 4);
                     Output.Write(result, 0, resultSize);
                 }
                 finally
@@ -294,10 +297,11 @@ namespace CallOfFile
         /// <param name="val">The value to write.</param>
         internal void Write<T>(T val) where T : unmanaged
         {
-            var asBytes = MemoryMarshal.Cast<T, byte>(stackalloc T[1]
+            Span<T> buf = stackalloc T[1]
             {
                 val
-            });
+            };
+            var asBytes = MemoryMarshal.Cast<T, byte>(buf);
             var byteCount = asBytes.Length;
             Resize(byteCount);
 

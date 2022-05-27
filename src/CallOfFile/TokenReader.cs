@@ -2,7 +2,10 @@
 // Call of File - By Philip Maher
 // Refer to LICENSE.md for license information.
 // -----------------------------------------------
-using System.Diagnostics.CodeAnalysis;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace CallOfFile
 {
@@ -15,7 +18,7 @@ namespace CallOfFile
         /// Requests the next token from the stream
         /// </summary>
         /// <returns></returns>
-        public abstract TokenData? RequestNextToken();
+        public abstract TokenData RequestNextToken();
 
         /// <summary>
         /// Requests the next token from the stream
@@ -66,7 +69,7 @@ namespace CallOfFile
         /// <returns></returns>
         public virtual IEnumerable<TokenData> ReadTokens()
         {
-            TokenData? token;
+            TokenData token;
 
             while((token = RequestNextToken()) != null)
             {
@@ -93,7 +96,7 @@ namespace CallOfFile
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Resulting token reader, if the provided file isn't supported, null is returned.</returns>
-        public static TokenReader? CreateReader(string? fileName)
+        public static TokenReader CreateReader(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 return null;
@@ -122,6 +125,6 @@ namespace CallOfFile
         /// <param name="fileName">Name of the file.</param>
         /// <param name="reader">Resulting reader.</param>
         /// <returns>True if a reader was successfully created, otherwise false.</returns>
-        public static bool TryCreateReader(string? fileName,[NotNullWhen(true)] out TokenReader? reader) => (reader = CreateReader(fileName)) != null;
+        public static bool TryCreateReader(string fileName, out TokenReader reader) => (reader = CreateReader(fileName)) != null;
     }
 }

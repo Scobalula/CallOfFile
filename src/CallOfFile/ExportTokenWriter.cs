@@ -2,6 +2,8 @@
 // Call of File - By Philip Maher
 // Refer to LICENSE.md for license information.
 // -----------------------------------------------
+using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 
 namespace CallOfFile
@@ -17,7 +19,7 @@ namespace CallOfFile
         /// <param name="fileName">File to write to.</param>
         public ExportTokenWriter(string fileName)
         {
-            Writer = new(fileName);
+            Writer = new StreamWriter(fileName);
         }
 
         /// <summary>
@@ -26,7 +28,7 @@ namespace CallOfFile
         /// <param name="stream">Stream to write to.</param>
         public ExportTokenWriter(Stream stream)
         {
-            Writer = new(stream);
+            Writer = new StreamWriter(stream);
         }
 
         /// <inheritdoc/>
