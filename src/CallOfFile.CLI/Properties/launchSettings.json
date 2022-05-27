@@ -2,7 +2,7 @@
   "profiles": {
     "CallOfFile.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Prj\\VS\\CallOfFile\\testfiles\\BinaryTests\\coffee_cart.xmodel_bin\""
+      "commandLineArgs": "\"F:\\SteamLib\\steamapps\\common\\Call of Duty World at War\\model_export\\american\\characters\\multiplayer\\char_usa_marine_player_body_rifle_LOD0.XMODEL_EXPORT\""
     }
   }
 }

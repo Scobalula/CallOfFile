@@ -128,7 +128,7 @@ namespace CallOfFile
                         {
                             return new TokenDataBoneWeight(
                                 ushort.Parse(TokenList[1]),
-                                float.Parse(TokenList[1]), token);
+                                float.Parse(TokenList[2]), token);
                         }
                     case TokenDataType.Tri:
                     case TokenDataType.Tri16:
@@ -186,6 +186,29 @@ namespace CallOfFile
         internal List<string> TokenList { get; set; }
 
         /// <summary>
+        /// Skips whitespace in the file.
+        /// </summary>
+        /// <param name="skipNewLines">Whether or not skip new lines.</param>
+        /// <returns>True if EOF was hit or EOL if skipNewLines is false.</returns>
+        internal bool SkipWhitespace(bool skipNewLines)
+        {
+            int c = Reader.Peek();
+
+            while (true)
+            {
+                if (c == -1)
+                    return false;
+                if ((c == '\n' || c == '\r') && !skipNewLines)
+                    return false;
+                if (c != ',' && !char.IsWhiteSpace((char)c) && c != '\n' && c != '\r')
+                    return true;
+
+                Reader.Read();
+                c = Reader.Peek();
+            }
+        }
+
+        /// <summary>
         /// Consumes tokens from the underlying reader.
         /// </summary>
         /// <exception cref="IOException">Thrown if EOF or EOL is hit while reading a string literal.</exception>
@@ -196,15 +219,10 @@ namespace CallOfFile
 
             while (true)
             {
+                if (!SkipWhitespace(true))
+                    break;
+
                 c = Reader.Read();
-
-                while (true)
-                {
-                    if (c == -1 || c != ',' && !char.IsWhiteSpace((char)c) && c != '\n' && c != '\r')
-                        break;
-
-                    c = Reader.Read();
-                }
 
                 TokenBuilder.Clear();
 
@@ -267,8 +285,7 @@ namespace CallOfFile
                 // now.
                 TokenList.Add(TokenBuilder.ToString());
 
-
-                if (c == '\n' || c == '\r' || c == -1)
+                if (!SkipWhitespace(false))
                     break;
             }
         }
